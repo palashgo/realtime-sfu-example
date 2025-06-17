@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Anthropic-Sample</string>
+    <string name="auth_token">Auth Token</string>
+    <string name="join_meeting">Join Meeting</string>
+    <string name="mic_on">Mic on</string>
+    <string name="mic_off">Mic off</string>
+    <string name="cloudflare_logo">Cloudflare Logo</string>
+    <string name="valid_auth_token">Please enter a valid auth token</string>
 </resources>
