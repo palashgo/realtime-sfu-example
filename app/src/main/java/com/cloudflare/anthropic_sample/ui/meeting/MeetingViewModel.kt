@@ -14,7 +14,7 @@ data class MeetingState(
   val isConnecting: Boolean = true,
   val activeSpeaker: String? = null,
   val didLeaveRoom: Boolean = false,
-  val micEnabled: Boolean = true,
+  val micEnabled: Boolean = false,
   val error: RtkError? = null,
 )
 

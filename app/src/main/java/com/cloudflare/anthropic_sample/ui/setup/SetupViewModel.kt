@@ -23,7 +23,12 @@ class SetupViewModel(private val rtkClient: RealtimeKitClient) : ViewModel() {
   val state = _state.asStateFlow()
 
   fun init(token: String) {
-    val meetingInfo = RtkMeetingInfo(authToken = token, enableVideo = false, enableAudio = true)
+    val meetingInfo = RtkMeetingInfo(
+      baseDomain = "realtime.cloudflare.com",
+      authToken = token,
+      enableVideo = false,
+      enableAudio = false
+    )
 
     _state.value = SetupState.Loading
 

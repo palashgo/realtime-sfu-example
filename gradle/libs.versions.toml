@@ -19,7 +19,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
-realtimekit-core = "com.cloudflare.realtimekit:core:1.0.0"
+realtimekit-core = "com.cloudflare.realtimekit:core:1.0.1"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
