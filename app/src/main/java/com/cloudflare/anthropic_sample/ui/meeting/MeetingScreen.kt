@@ -1,6 +1,7 @@
 package com.cloudflare.anthropic_sample.ui.meeting
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -16,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.MicOff
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -50,7 +53,10 @@ fun MeetingScreen(
     modifier = modifier.fillMaxSize(),
     state = state.value,
     onMicToggle = { viewModel.toggleMic() },
-    onLeaveMeeting,
+    onLeaveMeeting = {
+      viewModel.leaveRoom()
+      onLeaveMeeting()
+    },
   )
 }
 
@@ -62,7 +68,13 @@ fun MeetingScreenUi(
   onLeaveMeeting: () -> Unit = {},
 ) {
   val context = LocalContext.current
-  LaunchedEffect(state) { Toast.makeText(context, state.toString(), Toast.LENGTH_SHORT).show() }
+
+  LaunchedEffect(state) {
+    if (state.error != null) {
+      Toast.makeText(context, state.error.message, Toast.LENGTH_SHORT).show()
+      return@LaunchedEffect
+    }
+  }
 
   Scaffold { innerPadding ->
     Column(
@@ -70,18 +82,36 @@ fun MeetingScreenUi(
       verticalArrangement = Arrangement.Center,
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End,
+      ) {
+        val color = if (state.activeSpeaker != null) Color.Green else Color.Gray
+        val text =
+          if (state.activeSpeaker != null) stringResource(R.string.connected)
+          else stringResource(R.string.connecting)
+
+        Box(modifier = Modifier.clip(CircleShape).size(12.dp).background(color))
+        Text(text, modifier = Modifier.padding(start = 6.dp))
+      }
+
       Spacer(modifier = Modifier.weight(1f))
 
-      val brush = Brush.horizontalGradient(listOf(Color.Red, Color.Cyan))
-      Box(modifier = Modifier.clip(CircleShape).size(200.dp).background(brush)) {
-        Text(
-          "A\\",
-          modifier = Modifier.align(Alignment.Center),
-          fontSize = 70.sp,
-          fontWeight = FontWeight.Black,
-          color = Color.White,
-        )
+      AnimatedVisibility(visible = state.activeSpeaker != null) {
+        val brush = Brush.horizontalGradient(listOf(Color.Red, Color.Cyan))
+        Box(modifier = Modifier.clip(CircleShape).size(200.dp).background(brush)) {
+          Text(
+            "A\\",
+            modifier = Modifier.align(Alignment.Center),
+            fontSize = 70.sp,
+            fontWeight = FontWeight.Black,
+            color = Color.White,
+          )
+        }
       }
+
+      AnimatedVisibility(visible = state.activeSpeaker == null) { CircularProgressIndicator() }
 
       Spacer(modifier = Modifier.weight(1f))
 
@@ -107,15 +137,13 @@ fun MeetingScreenUi(
         FilledIconButton(
           modifier = Modifier.size(80.dp),
           colors = buttonColors,
-          onClick = onLeaveMeeting,
+          onClick = { onLeaveMeeting() },
         ) {
           Icon(
             modifier = Modifier.size(40.dp),
             imageVector = Icons.Filled.Close,
             tint = Color.White,
-            contentDescription =
-              if (state.micEnabled) stringResource(R.string.mic_on)
-              else stringResource(R.string.mic_off),
+            contentDescription = stringResource(R.string.leave_room),
           )
         }
       }
@@ -126,5 +154,7 @@ fun MeetingScreenUi(
 @DevicePreview
 @Composable
 fun MeetingScreenPreview() {
-  AnthropicSampleTheme { MeetingScreenUi(state = MeetingState()) }
+  AnthropicSampleTheme {
+    MeetingScreenUi(state = MeetingState(micEnabled = true, activeSpeaker = "A"))
+  }
 }

@@ -6,4 +6,10 @@
     <string name="mic_off">Mic off</string>
     <string name="cloudflare_logo">Cloudflare Logo</string>
     <string name="valid_auth_token">Please enter a valid auth token</string>
+    <string name="leave_room_description">Are you sure you want to leave the room?</string>
+    <string name="leave_room">Leave Room</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="connected">Connected</string>
+    <string name="connecting">Connecting</string>
 </resources>
