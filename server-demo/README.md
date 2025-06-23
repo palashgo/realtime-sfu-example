@@ -2,6 +2,8 @@
 
 Websocket in/out demo for Realtime SFU
 
+Auth: Re-use the same Basic Auth used for Creating a meeting.
+
 ## Websocket In
 
 WebSocket In can be used to consume the audio of the participant present in a given meeting. This only works when the other participant is already present in the meeting
@@ -9,7 +11,7 @@ WebSocket In can be used to consume the audio of the participant present in a gi
 1. Make a POST request to the Realtime SFU. Replace `<MEETING_ID>` with the ID of a RealtimeKit meeting, and `<CHANNEL_ID>` with any arbitary identifier, eg. `wsDemoConsume`
 
 ```sh
-$ curl -X POST https://media-hub-production.realtime.cloudflare.com/rooms/<MEETING_ID>/ws/<CHANNEL_ID>/in
+$ curl -X POST https://media-hub.realtime.cloudflare.com/meetings/<MEETING_ID>/ws/<CHANNEL_ID>/in -H "Authorization: Basic ..."
 ```
 
 2. Visit https://bridge.orange.cloudflare.dev/player and enter the WebSocket URL `wss://bridge.orange.cloudflare.dev/ws/<CHANNEL_ID>/subscribe` to start consuming the audio
@@ -35,5 +37,5 @@ $ ./ws-demo wsDemoProduce ./resources/PinkPanther60.ogg
 3. Link up the `CHANNEL_ID` to the meeting. This will make a dummy participant called `Agent` join the meeting
 
 ```
-$ curl -X POST https://media-hub-production.realtime.cloudflare.com/rooms/<MEETING_ID>/ws/<CHANNEL_ID>/out
+$ curl -X POST https://media-hub.realtime.cloudflare.com/meetings/<MEETING_ID>/ws/<CHANNEL_ID>/out -H "Authorization: Basic ..."
 ```
